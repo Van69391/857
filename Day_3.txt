@@ -1,2 +1,2 @@
 ﻿Day 3 Git Practice
-66666
+I know how to use Git now.
