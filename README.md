@@ -1,1 +1,12 @@
-0364702 feat: start campus helper
+#day 4
+制作个人信息卡片
+#day 5
+制作了可互动组件
+#day 6
+##当前功能
+个人信息名片
+学习打卡功能
+校园活动列表展示
+支持滚动操作
+##解答
+改动activities.ts

@@ -1,99 +1,82 @@
 import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { FlatList, Text, View, StyleSheet } from 'react-native';
+import {activities} from '../data/activities';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ProfileCard from '../components/ProfileCard';
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import ProfileCard from '../components/ProfileCard';
+import CheckInCard from '../components/CheckInCard';
 
 export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            <ProfileCard name="谭铭竣" major="海洋技术" goal="React Native" />
-            
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
+        <FlatList
+  data={activities}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => (
+    <View style={styles.activityCard}>
+      <Text style={styles.activityTitle}>{item.title}</Text>
+      <Text>{item.time} · {item.location}</Text>
+    </View>
+  )}
+  ListHeaderComponent={
+    <View>
+      <Text style={styles.pageTitle}>CampusHelper</Text>
+      <ProfileCard name="谭铭竣" major="海洋技术" goal="React Native" />
+      <CheckInCard />
+      <Text style={styles.sectionTitle}>校园活动</Text>
+    </View>
+  }
+  contentContainerStyle={styles.content}
+/>
       </SafeAreaView>
     </ThemedView>
+    
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
+    justifyContent: 'center', 
     alignItems: 'center',
+    paddingHorizontal: Spacing.four,
     gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.three,
     maxWidth: MaxContentWidth,
+    width: '100%',
+    alignSelf: 'center',
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
+ pageTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 16,
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 24,
+    marginBottom: 12,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  activityCard: {
+    padding: 16,
+    backgroundColor: '#f1f5f9',
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  activityTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  content: {
+    padding: 20,
+    paddingBottom: 40,
   },
 });
